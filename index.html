@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Company Logos</title>
+    <script src="https://unpkg.com/vue" charset="utf-8"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body>
+
+    <div id="app">
+        <div class="container">
+            <section class="col-xs-12 col-sm-6 col-md-12">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="row">
+                        <div id="logo" class="text-center">
+                            <h1>Company Logos</h1>
+                            <p>Search company logos</p>
+                        </div>
+                        <div id="form-buscar">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input v-model="companyName" class="form-control" type="text" name="search" placeholder="Search..." required/>
+                                    <span class="input-group-btn">
+                       <button v-on:click="getLogo" class="btn btn-success" type="submit">
+                       <i class="glyphicon glyphicon-search" aria-hidden="true"></i> Search
+                       </button>
+                       </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="row" v-if="results.length > 0">
+                <hgroup class="mb20">
+                    <h1>Search Results</h1>
+                    <h2 class="lead"><strong class="text-danger">{{results.length}}</strong> results were found for the search for <strong class="text-danger">{{companyName}}</strong></h2>
+                </hgroup>
+
+                <section class="col-xs-12 col-sm-6 col-md-12">
+                    <article class="search-result row col-xs-4 col-xs-offset-1" v-for="result in results">
+                        <div class="col-xs-12 col-sm-12 col-md-3">
+                            <a href="#" title="Lorem ipsum" class="thumbnail"><img :src="result.logo" :alt="result.name" /></a>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-7 excerpet">
+                            <h3><a href="#" title="">{{result.name}}</a></h3>
+                            <p>{{result.domain}}</p>
+                        </div>
+                        <span class="clearfix borda"></span>
+                    </article>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var app = new Vue({
+            el: "#app",
+            data: {
+                companyName: "",
+                results: [],
+                isLoading: false
+            },
+            methods: {
+                fetchData: function(apiURL) {
+                    fetch(apiURL)
+                        .then((res) => {
+                            return res.json()
+                        })
+                        .then((res) => {
+                            this.results = res;
+                        })
+                    this.isLoading = false;
+                },
+                getLogo: function() {
+                    if (this.companyName != "") {
+                        this.isLoading = true;
+                        this.fetchData("https://autocomplete.clearbit.com/v1/companies/suggest?query=" + this.companyName);
+                    }
+                }
+            }
+        });
+    </script>
+    <style media="screen">
+        @import "http://fonts.googleapis.com/css?family=Roboto:300,400,500,700";
+        .container {
+            margin-top: 20px;
+        }
+        
+        .mb20 {
+            margin-bottom: 20px;
+        }
+        
+        hgroup {
+            padding-left: 15px;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        hgroup h1 {
+            font: 500 normal 1.625em "Roboto", Arial, Verdana, sans-serif;
+            color: #2a3644;
+            margin-top: 0;
+            line-height: 1.15;
+        }
+        
+        hgroup h2.lead {
+            font: normal normal 1.125em "Roboto", Arial, Verdana, sans-serif;
+            color: #2a3644;
+            margin: 0;
+            padding-bottom: 10px;
+        }
+        
+        .search-result .thumbnail {
+            border-radius: 0 !important;
+        }
+        
+        .search-result {
+            margin-top: 20px;
+        }
+        
+        .search-result .col-md-2 {
+            border-right: 1px dotted #ccc;
+            min-height: 140px;
+        }
+        
+        .search-result ul {
+            padding-left: 0 !important;
+            list-style: none;
+        }
+        
+        .search-result ul li {
+            font: 400 normal .85em "Roboto", Arial, Verdana, sans-serif;
+            line-height: 30px;
+        }
+        
+        .search-result ul li i {
+            padding-right: 5px;
+        }
+        
+        .search-result .col-md-7 {
+            position: relative;
+        }
+        
+        .search-result h3 {
+            font: 500 normal 1.375em "Roboto", Arial, Verdana, sans-serif;
+            margin-top: 0 !important;
+            margin-bottom: 10px !important;
+        }
+        
+        .search-result h3 > a,
+        .search-result i {
+            color: #248dc1 !important;
+        }
+        
+        .search-result p {
+            font: normal normal 1.125em "Roboto", Arial, Verdana, sans-serif;
+        }
+        
+        .search-result span.plus {
+            position: absolute;
+            right: 0;
+            top: 126px;
+        }
+        
+        .search-result span.plus a {
+            background-color: #248dc1;
+            padding: 5px 5px 3px 5px;
+        }
+        
+        .search-result span.plus a:hover {
+            background-color: #414141;
+        }
+        
+        .search-result span.plus a i {
+            color: #fff !important;
+        }
+        
+        .search-result span.border {
+            display: block;
+            width: 97%;
+            margin: 0 15px;
+            border-bottom: 1px dotted #ccc;
+        }
+    </style>
+</body>
+
+</html>
